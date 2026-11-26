@@ -503,17 +503,8 @@ static void tps43_work_handler(struct k_work *work) {
             LOG_INF("Three-finger movement - checking for swipe");
             tps43_handle_swipe(dev, num_fingers, rel_x, rel_y);
         } else if (is_scroll_active) {
-            // Scroll processing: keep only dominant axis
-            if (abs(rel_x) > abs(rel_y)) {
-                // Horizontal scroll
-                if (config->invert_scroll_x) {
-                    rel_x = -rel_x;
-                }
-                int16_t wheel = (rel_x * config->scroll_sensitivity) / 100;
-                LOG_INF("Scrolling %d horizontally", wheel);
-                input_report_rel(dev, INPUT_REL_HWHEEL, wheel, true, K_FOREVER);
-            } else {
-                // Vertical scroll
+            // LOCAL PATCH: ignore horizontal-dominant two-finger scrolls.
+            if (abs(rel_y) >= abs(rel_x)) {
                 if (config->invert_scroll_y) {
                     rel_y = -rel_y;
                 }
