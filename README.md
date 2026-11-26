@@ -26,7 +26,7 @@ One Space/NAV and one Backspace/Shift replace the two identical Hillside keys of
 - **SYM:** Tap the left middle thumb for one symbol, or hold it for the layer. **ADJ:** Hold NAV and SYM together for the Toucan function and media keys. On ADJ, Z unlocks Studio and the five right home-row keys (M through O) select Bluetooth profiles 0–4.
 - **WM:** Hold the left outer thumb for the Hillside Alt shortcuts. On WM the right inner thumb is Shift; the left middle thumb enters the bootloader.
 - **NUM:** The top-right finger key taps keypad 0. Hold it and the other nine top-row keys send keypad 1–9.
-- **MOU:** In pointing mode, touching the trackpad activates MOU. All 36 keys, including the thumbs, pass through to the layer underneath. S + T and F + P still click. R + S leaves MOU without sending Escape or resetting other layers. NAV and SYM keep the Toucan’s trackpad scrolling override; gestures, zoom and sensitivity are unchanged.
+- **MOU:** In pointing mode, touching the trackpad activates MOU. All 36 keys, including the thumbs, pass through to the layer underneath. S + T and F + P still click. R + S leaves MOU without sending Escape or resetting other layers. NAV and SYM keep the Toucan’s trackpad scrolling override. Pinch-to-zoom is disabled; two-finger scrolling and tapping remain enabled.
 
 | Base-layer combo | Action |
 | --- | --- |
