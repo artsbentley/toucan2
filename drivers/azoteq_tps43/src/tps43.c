@@ -16,13 +16,6 @@
 
 #include "tps43.h"
 
-// LOCAL PATCH: only the diagnostic image reads the extra byte before gesture data.
-#ifdef CONFIG_INPUT_TPS43_TIMING
-#define TPS43_FRAME_START TPS43_REG_PREVIOUS_CYCLE_TIME
-#else
-#define TPS43_FRAME_START TPS43_REG_GESTURE_EVENTS_0
-#endif
-
 LOG_MODULE_REGISTER(tps43, CONFIG_INPUT_LOG_LEVEL);
 
 /*
@@ -434,7 +427,7 @@ static void tps43_work_handler(struct k_work *work) {
     /*
      * Read the whole contiguous block from GESTURE_EVENTS_0 through REL_Y in a
      * single I2C transaction instead of issuing several independent reads.
-     * Byte offsets below are relative to GESTURE_EVENTS_0 in both builds:
+     * This is much cheaper on the bus. Byte offsets into the buffer:
      *   [0] GESTURE_EVENTS_0   (0x000D)
      *   [1] GESTURE_EVENTS_1   (0x000E)
      *   [2] SYSTEM_INFO_0      (0x000F)
@@ -443,9 +436,9 @@ static void tps43_work_handler(struct k_work *work) {
      *   [5..6] REL_X           (0x0012, big-endian)
      *   [7..8] REL_Y           (0x0014, big-endian)
      */
-    uint8_t frame[(TPS43_REG_REL_Y + 2) - TPS43_FRAME_START];
-    const uint8_t *touch_data = frame + (TPS43_REG_GESTURE_EVENTS_0 - TPS43_FRAME_START);
-    ret = read_sequence_registers(dev, TPS43_FRAME_START, frame, sizeof(frame));
+    uint8_t touch_data[(TPS43_REG_REL_Y + 2) - TPS43_REG_GESTURE_EVENTS_0];
+    ret = read_sequence_registers(dev, TPS43_REG_GESTURE_EVENTS_0, touch_data,
+                                  sizeof(touch_data));
     if (ret < 0) {
         LOG_ERR("Touch data read error: %d", ret);
         goto done;
@@ -455,12 +448,6 @@ static void tps43_work_handler(struct k_work *work) {
     uint8_t num_fingers = touch_data[4];
     int16_t rel_x = (int16_t)((touch_data[5] << 8) | touch_data[6]);
     int16_t rel_y = (int16_t)((touch_data[7] << 8) | touch_data[8]);
-
-#ifdef CONFIG_INPUT_TPS43_TIMING
-    bool active_one_finger = num_fingers == 1 && (touch_data[2] & TPS43_CHARGING_MODE_MASK) == 0;
-    tps43_timing_observe(&drv_data->timing, k_uptime_get_32(), active_one_finger,
-                         rel_x != 0 || rel_y != 0, frame[0], (touch_data[3] & TPS43_RR_MISSED) != 0);
-#endif
 
     bool is_touching = (num_fingers > 0);
     if (is_touching != drv_data->touching) {

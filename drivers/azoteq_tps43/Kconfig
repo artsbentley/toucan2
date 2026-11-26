@@ -24,14 +24,6 @@ config INPUT_TPS43_WORK_QUEUE_PRIORITY
       Local patch. -1 is the same cooperative priority as the system work queue on which the
       handler used to run, so read timing matches upstream.
 
-config INPUT_TPS43_TIMING
-    bool "Summarize one-finger sensor timing over USB"
-    depends on ZMK_USB_LOGGING
-    help
-      Read the IQS5xx previous-cycle time with the existing touch frame. Log a
-      single summary at the end of a sustained active one-finger movement.
-      Leave off for normal firmware.
-
 config INPUT_TPS43_INIT_PRIORITY
     int "Init priority"
     default 90

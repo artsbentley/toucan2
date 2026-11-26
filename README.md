@@ -10,32 +10,6 @@ This firmware targets the **36-key** [Toucan2](https://beekeeb.com/introducing-t
 - **Layer scrolling**: `nav_scroller` and `sym_scroller` in [boards/shields/toucan/toucan.dtsi](boards/shields/toucan/toucan.dtsi) set the direction when pad movement is mapped to scrolling. NAV scrolls in the opposite direction from SYM on both axes.
 - **Two-finger scrolling / trackpad settings**: the `tps43_trackpad` node in [boards/shields/toucan/toucan_right.overlay](boards/shields/toucan/toucan_right.overlay)
 
-## Optional trackpad timing test (Mac)
-
-The `firmware` ZIP also contains **`toucan2_36_right_timing_usb.uf2`**. It is a temporary
-replacement for the **right** image, not a third file to flash in sequence. It keeps the normal
-10 ms target and wireless split, reads one extra sensor byte in the same I²C transaction,
-and sends a summary over USB. The two normal images have neither the extra read nor USB timing logs.
-
-1. Leave the normal `toucan2_36_left.uf2` on the left half, unplug that half and connect it
-   to the Mac over Bluetooth. Flash the timing UF2 to the right half and leave **only the right
-   half** connected to the Mac with a USB **data** cable. No pairing reset is needed.
-2. In Terminal, run `ls /dev/cu.usbmodem*` to find the right half’s serial port. Open it with
-   `screen /dev/cu.usbmodemXXXX 115200` (replace the example path with the actual port).
-3. With the serial session open, run the [10-second browser capture](https://windspoor.github.io/mouse-polling-rate-test/):
-   draw continuous one-finger circles on the Toucan, then lift. Copy the `TPS43_TIMING` line and the browser’s
-   `pointerrawupdate` **Samples / s** from that run. Short taps do not print a summary.
-4. To exit `screen`, press **Ctrl-A**, then **k**, then **y**. Flash `toucan2_36_right.uf2`
-   back to the right half for normal battery use. Do not flash `settings_reset`.
-
-`moving_hz` counts nonzero X/Y frames **read by the right half** per elapsed second. `cycle_mean_us`
-comes from the chip’s own previous-cycle register (10,000 µs = 10 ms); `rr_missed` counts sampled
-cycles where the chip says it missed its requested interval. Both use the `samples` in one continuous
-active, one-finger stretch; the first frame is excluded because its previous cycle may have been idle.
-A high right-side movement count with a low browser count points to the path after the sensor read;
-neither number alone is the display FPS. The diagnostic is USB-powered, so compare its two readings
-from the same run rather than treating it as a battery measurement.
-
 ## Hillside layout on the Toucan2
 
 All 30 finger keys use the personal Hillside keymap. There are no extra pinky columns: the three finger rows use positions 0–29, then the thumbs use positions 30–35.

@@ -6,10 +6,6 @@
 #include <zephyr/drivers/i2c.h>
 #include <stdint.h>
 
-#ifdef CONFIG_INPUT_TPS43_TIMING
-#include "tps43_timing.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,8 +15,6 @@ extern "C" {
 
 /* TPS43 controller register definitions with IQS572 - Based on IQS5xx-B000 datasheet */
 /* https://www.azoteq.com/images/stories/pdf/iqs5xx-b000_trackpad_datasheet.pdf */
-
-#define TPS43_REG_PREVIOUS_CYCLE_TIME 0x000C /* Previous sensor cycle, in milliseconds */
 
 /* Gesture events */
 // Read-only
@@ -113,7 +107,7 @@ extern "C" {
 /* ============================================================ */
 
 #define TPS43_SHOW_RESET            BIT(7)      /* Flag check on system reset */
-#define TPS43_CHARGING_MODE_MASK    0x07        /* Bits 2:0; 0 = active mode */
+#define TPS43_CHARGING_MODE_MASK    0x07        /* Charging mode (bits 0-3) */
 
 /* ============================================================ */
 /* System information 1 (0x0010) - Status flags - 8 bits */
@@ -278,9 +272,6 @@ struct tps43_drv_data {
     bool suspended;
     bool touching;
     int64_t last_three_finger_swipe_ms;
-#ifdef CONFIG_INPUT_TPS43_TIMING
-    struct tps43_timing timing;
-#endif
 };
 
 int tps43_set_sleep(const struct device *dev, bool sleep);
