@@ -55,6 +55,8 @@
         rst-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
         rdy-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
 
+        report-rate-active = <8>; // Request 125 Hz while actively tracking a finger.
+
         enable-power-management;
         // Leave idle-sleep off so a touch can wake the pad while the keyboard is idle.
         // Idle -> LP1 -> LP2: 20 s + (44 x 20 s) = 15 minutes without a touch.
