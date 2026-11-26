@@ -42,24 +42,18 @@ K_THREAD_STACK_DEFINE(tps43_work_q_stack, CONFIG_INPUT_TPS43_WORK_QUEUE_STACK_SI
 static struct k_work_q tps43_work_q;
 static bool tps43_work_q_started;
 
-/**
- * @brief Ends communication window with trackpad
- *
- * After each read of trackpad registers, it is necessary to end the communication window
- * by writing the special address 0xEEEE, which causes a NACK from the device.
- * This is a mandatory step according to the IQS5xx protocol.
- *
- * @param dev Pointer to trackpad device
+/* LOCAL PATCH: IQS5xx-B000 §8.7 ends a session by writing one data byte to
+ * 0xEEEE followed by STOP. The chip can then start its next sensing cycle.
  */
 static void tps43_end_communication_window(const struct device *dev) {
     const struct tps43_config *config = dev->config;
-    uint8_t end_buf[2];
-
+    uint8_t end_buf[3] = {0}; // Big-endian register address followed by an arbitrary data byte.
     sys_put_be16(TPS43_REG_END_COMM_WINDOW, end_buf);
 
     int ret = i2c_write_dt(&config->i2c_bus, end_buf, sizeof(end_buf));
+    // Best effort: a timed-out or suspended device may already have closed the window.
     if (ret != 0 && ret != -EIO) {
-        LOG_INF("End communication window write returned: %d (NACK expected)", ret);
+        LOG_WRN("End communication window write failed: %d", ret);
     }
 }
 
@@ -439,6 +433,9 @@ static void tps43_work_handler(struct k_work *work) {
     uint8_t touch_data[(TPS43_REG_REL_Y + 2) - TPS43_REG_GESTURE_EVENTS_0];
     ret = read_sequence_registers(dev, TPS43_REG_GESTURE_EVENTS_0, touch_data,
                                   sizeof(touch_data));
+    // LOCAL PATCH: the frame is buffered. Close once, even on a read error, before
+    // any input_report_* can block waiting for space on the split link.
+    tps43_end_communication_window(dev);
     if (ret < 0) {
         LOG_ERR("Touch data read error: %d", ret);
         goto done;
@@ -539,7 +536,6 @@ static void tps43_work_handler(struct k_work *work) {
 done:
     // Save for next call
     drv_data->drag_active = is_drag_active;
-    tps43_end_communication_window(dev);
 
     // Release semaphore after completing all I2C operations
     k_sem_give(&drv_data->lock);
