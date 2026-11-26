@@ -26,11 +26,11 @@ One Space/NAV and one Backspace/Shift replace the two identical Hillside keys of
 - **SYM:** Tap the left middle thumb for one symbol, or hold it for the layer. **ADJ:** Hold NAV and SYM together for the Toucan function and media keys. On ADJ, Z unlocks Studio and the five right home-row keys (M through O) select Bluetooth profiles 0–4.
 - **WM:** Hold the left outer thumb for the Hillside Alt shortcuts. On WM the right inner thumb is Shift; the left middle thumb enters the bootloader.
 - **NUM:** The top-right finger key taps keypad 0. Hold it and the other nine top-row keys send keypad 1–9.
-- **MOU:** In pointing mode, touching the trackpad activates MOU. All 36 keys, including the thumbs, pass through to the layer underneath. Only the S + T and F + P click combos are active on MOU. NAV and SYM keep the Toucan’s trackpad scrolling override; gestures, zoom and sensitivity are unchanged.
+- **MOU:** In pointing mode, touching the trackpad activates MOU. All 36 keys, including the thumbs, pass through to the layer underneath. S + T and F + P still click. R + S leaves MOU without sending Escape or resetting other layers. NAV and SYM keep the Toucan’s trackpad scrolling override; gestures, zoom and sensitivity are unchanged.
 
 | Base-layer combo | Action |
 | --- | --- |
-| R + S | Esc (also works at the same positions on SYM) |
+| R + S | Esc on BASE/SYM; leave the mouse layer on MOU |
 | W + F | Tab |
 | U + Y | Alt+Backspace (delete word) |
 | SYM thumb + Enter thumb | Ctrl |
@@ -41,13 +41,21 @@ Both click combos press the button as soon as the second key completes the chord
 
 Edit [config/toucan.keymap](config/toucan.keymap) for bindings. [config/toucan_36_layout.dtsi](config/toucan_36_layout.dtsi) maps the PCB to 36 positions for firmware and Studio; [config/toucan.json](config/toucan.json) mirrors that geometry for the keymap editor. The upstream shield’s 42-key fallback is unchanged and is not the layout used by this build. If you previously saved a layout in ZMK Studio, **Restore Stock Settings** in Studio loads the newly flashed keymap in place of those edits.
 
+### If the keyboard stays on MOU
+
+The left half owns the layer state. Lifting your finger clears MOU even if you started scrolling on NAV/SYM during the touch. If the release never arrives, regular keyboard idle (about 30 seconds without input) or deep sleep clears MOU. You can also press **R + S together on the left** to clear it immediately. Lift and touch again to start a fresh mouse session.
+
+If the cursor **and** right-hand letters stop working until reset, clearing a layer cannot revive the right half. The [patched TPS43 driver](drivers/azoteq_tps43/README.md) keeps the trackpad's Bluetooth traffic from blocking the worker used for key scanning. Flash **both** normal UF2s from the same build: the driver fix is on the right, layer recovery is on the left. Do not flash `settings_reset` for this.
+
+After flashing, check that the Space thumb still types Space while touching the pad. To test recovery, touch the pad, hold Space for NAV, lift your finger, then release Space: the display should return to BASE and W + F should send Tab. Also check that right-hand letters still type after leaving the board idle following trackpad use.
+
 # License
 
 The code in this repo is available under the MIT license.
 
 The included shield nice_view_gem is modified from https://github.com/M165437/nice-view-gem licensed under the MIT License.
 
-The linked trackpad module is based on https://github.com/geeksville/zmk_driver_azoteq
+The vendored TPS43 driver is based on [beekeeb/zmk_driver_azoteq](https://github.com/beekeeb/zmk_driver_azoteq), with [Mike’s work-queue fix](https://github.com/myanhon/toucan2-config/commit/3b72dd3). Its [MIT license](drivers/azoteq_tps43/LICENSE) is included.
 
 ZMK code snippets are taken from the ZMK documentation under the MIT license.
 

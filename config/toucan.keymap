@@ -31,6 +31,15 @@
 };
 
 / {
+    behaviors {
+        layer_off: layer_off {
+            compatible = "zmk,behavior-toggle-layer";
+            #binding-cells = <1>;
+            toggle-mode = "off";
+            display-name = "Leave layer";
+        };
+    };
+
     // Three rows of 5+5 (0..29), then the six thumbs left to right (30..35).
     combos {
         compatible = "zmk,combos";
@@ -39,6 +48,12 @@
             key-positions = <11 12>; // R + S (same positions on SYM)
             bindings = <&kp ESC>;
             layers = <L_BASE L_SYM>;
+        };
+        // Left-only recovery if the peripheral cannot send a touch-up.
+        combo_leave_mouse {
+            key-positions = <11 12>; // R + S
+            bindings = <&layer_off L_MOUSE>;
+            layers = <L_MOUSE>;
         };
         combo_tab {
             key-positions = <2 1>; // F + W
