@@ -7,7 +7,8 @@ This firmware targets the **36-key** [Toucan2](https://beekeeb.com/introducing-t
 - **Keymap**: [config/toucan.keymap](config/toucan.keymap)
 - **General configs**: [boards/shields/toucan/toucan_left.conf](boards/shields/toucan/toucan_left.conf) and [boards/shields/toucan/toucan_right.conf](boards/shields/toucan/toucan_right.conf)
 - **Swipe shortcuts**: the `swipe_button_mapper` node in [boards/shields/toucan/toucan.dtsi](boards/shields/toucan/toucan.dtsi)
-- **Invert scroll / trackpad settings**: the `tps43_trackpad` node in [boards/shields/toucan/toucan_right.overlay](boards/shields/toucan/toucan_right.overlay)
+- **Layer scrolling**: `nav_scroller` and `sym_scroller` in [boards/shields/toucan/toucan.dtsi](boards/shields/toucan/toucan.dtsi) set the direction when pad movement is mapped to scrolling. NAV scrolls in the opposite direction from SYM on both axes.
+- **Two-finger scrolling / trackpad settings**: the `tps43_trackpad` node in [boards/shields/toucan/toucan_right.overlay](boards/shields/toucan/toucan_right.overlay)
 
 ## Hillside layout on the Toucan2
 
