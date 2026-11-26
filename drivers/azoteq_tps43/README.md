@@ -7,7 +7,7 @@ This is the TPS43 / IQS5xx trackpad driver from
 [beekeeb/zmk_driver_azoteq](https://github.com/beekeeb/zmk_driver_azoteq), branch `main`
 (the branch `config/west.yml` used to build; the repo's default branch is `master`), copied at
 commit `c329f309b7481e5723603550b15f48e24d0c8a6a` (2026-07-11, "Add three_finger_swipe
-throttle"), with one local fix. It replaces the
+throttle"), with the local patches described below. It replaces the
 `zmk_driver_azoteq` entry that used to be in `config/west.yml`. The files are unchanged from
 upstream except where marked `LOCAL PATCH`, plus the new `CMakeLists.txt`, the two
 `INPUT_TPS43_WORK_QUEUE_*` options in `Kconfig`, and this README.
@@ -39,10 +39,21 @@ never blocked by the trackpad and always processes Bluetooth TX completions. Und
 trackpad handler still waits, which is harmless back-pressure. The lock and work item are also
 initialised before the RDY interrupt is enabled.
 
+## Split pointer traffic
+
+ZMK v0.3 sends each axis event in its own Bluetooth notification. For a horizontal or vertical
+movement, the right half now sends just the nonzero axis, marked as the end of the sample.
+For diagonal movement it still sends X followed by Y, with only Y marked as the end. This
+preserves one mouse report per movement without changing pointer gain or the 10 ms sensor setting.
+
+On the left, the [shield config](../../boards/shields/toucan/toucan_left.conf) gives the split
+receive queue 16 entries (up from 5) and the input queue 32 (up from 16). Both can drop events
+when full. The extra space helps with bursts; it does not make the radio or sensor run faster.
+
 ## Updating
 
 To pick up upstream changes, copy the new files from the upstream `main` branch over `src/`,
 `dts/` and `Kconfig`, then re-apply the `LOCAL PATCH` hunks in `src/tps43.c` and the two Kconfig options. Once
-upstream contains an equivalent fix, delete this directory, restore the `cmake`, `kconfig` and
+upstream contains equivalent fixes for both local patches, delete this directory, restore the `cmake`, `kconfig` and
 `dts_root` lines in `zephyr/module.yml` to only `board_root: .`, and add `zmk_driver_azoteq`
 back to `config/west.yml`.

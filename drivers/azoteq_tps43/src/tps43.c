@@ -540,8 +540,14 @@ static void tps43_work_handler(struct k_work *work) {
             }
             LOG_INF("Sending movement: dx=%d, dy=%d", rel_x, rel_y);
 
-            input_report_rel(dev, INPUT_REL_X, rel_x, false, K_FOREVER);
-            input_report_rel(dev, INPUT_REL_Y, rel_y, true, K_FOREVER);
+            // LOCAL PATCH: each axis costs a split notification. Only send movement;
+            // sync the last axis so the central still sends one HID report per sample.
+            if (rel_x != 0) {
+                input_report_rel(dev, INPUT_REL_X, rel_x, rel_y == 0, K_FOREVER);
+            }
+            if (rel_y != 0) {
+                input_report_rel(dev, INPUT_REL_Y, rel_y, true, K_FOREVER);
+            }
         }
     }
 
