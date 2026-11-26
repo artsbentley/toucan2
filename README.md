@@ -15,10 +15,9 @@ All 30 finger keys use the personal Hillside keymap. There are no extra pinky co
 
 The thumbs below are in physical order, left to right:
 
-| Mode | Left outer | Left middle | Left inner | Right inner | Right middle | Right outer |
-| --- | --- | --- | --- | --- | --- | --- |
-| Typing | Hold: WM | Sticky SYM | Space / hold: NAV | Backspace / hold: Shift | Enter | Right Alt |
-| Mouse | Middle click | Left click | Right click | Left click | Right click | Middle click |
+| Left outer | Left middle | Left inner | Right inner | Right middle | Right outer |
+| --- | --- | --- | --- | --- | --- |
+| Hold: WM | Sticky SYM | Space / hold: NAV | Backspace / hold: Shift | Enter | Right Alt |
 
 One Space/NAV and one Backspace/Shift replace the two identical Hillside keys of each kind. The upper A and Esc thumbs are gone; A stays on the home row and R + S gives Esc.
 
@@ -26,7 +25,7 @@ One Space/NAV and one Backspace/Shift replace the two identical Hillside keys of
 - **SYM:** Tap the left middle thumb for one symbol, or hold it for the layer. **ADJ:** Hold NAV and SYM together for the Toucan function and media keys. On ADJ, Z unlocks Studio and the five right home-row keys (M through O) select Bluetooth profiles 0–4.
 - **WM:** Hold the left outer thumb for the Hillside Alt shortcuts. On WM the right inner thumb is Shift; the left middle thumb enters the bootloader.
 - **NUM:** The top-right finger key taps keypad 0. Hold it and the other nine top-row keys send keypad 1–9.
-- **MOU:** In pointing mode, touching the trackpad activates the mouse row above; lifting your finger returns to typing. J and L send Alt+Left and Alt+Right. NAV and SYM keep the Toucan’s trackpad scrolling override; gestures, zoom and sensitivity are unchanged.
+- **MOU:** In pointing mode, touching the trackpad activates MOU. All 36 keys, including the thumbs, pass through to the layer underneath. Only the S + T and F + P click combos are active on MOU. NAV and SYM keep the Toucan’s trackpad scrolling override; gestures, zoom and sensitivity are unchanged.
 
 | Base-layer combo | Action |
 | --- | --- |
