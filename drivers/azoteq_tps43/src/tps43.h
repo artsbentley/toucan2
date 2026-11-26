@@ -194,7 +194,7 @@ extern "C" {
 #define TPS43_ALP_COUNT_FILTER     BIT(3)      /* ALP count filter */
 
 
-/* IQS5xx-B000 §8.7: write one data byte to this address to end the I2C session. */
+/* End communication window - MUST be called after each read (writing to invalid address 0xEEEE causes NACK) */
 #define TPS43_REG_END_COMM_WINDOW   0xEEEE
 
 struct tps43_config {
