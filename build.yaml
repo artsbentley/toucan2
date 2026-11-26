@@ -28,4 +28,12 @@ include:
     shield: toucan_right rgbled_adapter
     artifact-name: toucan2_36_right
   - board: seeeduino_xiao_ble
+    shield: toucan_right rgbled_adapter
+    artifact-name: toucan2_36_right_timing_usb
+    snippet: zmk-usb-logging
+    cmake-args: >-
+      -DCONFIG_INPUT_TPS43_TIMING=y
+      -DCONFIG_ZMK_LOGGING_MINIMAL=y
+      -DCONFIG_LOG_DEFAULT_LEVEL=2
+  - board: seeeduino_xiao_ble
     shield: settings_reset
