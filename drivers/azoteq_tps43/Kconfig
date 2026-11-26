@@ -1,0 +1,33 @@
+config INPUT_TPS43
+    bool "Azoteq TPS43 I2C Touchpad Input Device"
+    default y
+    depends on DT_HAS_AZOTEQ_TPS43_ENABLED
+    depends on I2C
+    depends on INPUT
+    help
+      Enable driver for Azoteq touchpad input device over I2C interface.
+      Supports multitouch gestures, scrolling, clicks and power management.
+
+if INPUT_TPS43
+
+config INPUT_TPS43_WORK_QUEUE_STACK_SIZE
+    int "Stack size of the TPS43 work queue thread"
+    default 2048
+    help
+      Local patch: the trackpad work handler runs on its own work queue instead of the system
+      work queue (see drivers/azoteq_tps43/README.md).
+
+config INPUT_TPS43_WORK_QUEUE_PRIORITY
+    int "Priority of the TPS43 work queue thread"
+    default -1
+    help
+      Local patch. -1 is the same cooperative priority as the system work queue on which the
+      handler used to run, so read timing matches upstream.
+
+config INPUT_TPS43_INIT_PRIORITY
+    int "Init priority"
+    default 90
+    help
+      Device driver initialization priority.
+
+endif # ZMK_SENSOR_TPS43
