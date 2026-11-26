@@ -34,8 +34,10 @@ One Space/NAV and one Backspace/Shift replace the two identical Hillside keys of
 | W + F | Tab |
 | U + Y | Alt+Backspace (delete word) |
 | SYM thumb + Enter thumb | Ctrl |
-| S + T | Left click (after 50 ms idle) |
-| F + P | Tap: right click; hold: mouse layer |
+| S + T | Left mouse button (BASE and MOU) |
+| F + P | Right mouse button (BASE and MOU) |
+
+Both click combos press the button as soon as the second key completes the chord, even immediately after typing. Hold both keys to keep the button down; release either key to let go. Touch the trackpad, not F + P, to activate MOU.
 
 Edit [config/toucan.keymap](config/toucan.keymap) for bindings. [config/toucan_36_layout.dtsi](config/toucan_36_layout.dtsi) maps the PCB to 36 positions for firmware and Studio; [config/toucan.json](config/toucan.json) mirrors that geometry for the keymap editor. The upstream shield’s 42-key fallback is unchanged and is not the layout used by this build. If you previously saved a layout in ZMK Studio, **Restore Stock Settings** in Studio loads the newly flashed keymap in place of those edits.
 

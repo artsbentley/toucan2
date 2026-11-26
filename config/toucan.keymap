@@ -31,16 +31,6 @@
 };
 
 / {
-    behaviors {
-        momouse: momentary_mouse {
-            compatible = "zmk,behavior-hold-tap";
-            display-name = "Mouse layer / click";
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
-            bindings = <&mo>, <&mkp>;
-        };
-    };
-
     // Three rows of 5+5 (0..29), then the six thumbs left to right (30..35).
     combos {
         compatible = "zmk,combos";
@@ -68,13 +58,12 @@
         combo_left_click {
             key-positions = <13 12>; // T + S
             bindings = <&mkp LCLK>;
-            layers = <L_BASE>;
-            require-prior-idle-ms = <50>;
+            layers = <L_BASE L_MOUSE>;
         };
         combo_right_click {
             key-positions = <3 2>; // P + F
-            bindings = <&momouse L_MOUSE RCLK>;
-            layers = <L_BASE>;
+            bindings = <&mkp RCLK>;
+            layers = <L_BASE L_MOUSE>;
         };
     };
 
