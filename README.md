@@ -22,6 +22,7 @@ The thumbs below are in physical order, left to right:
 
 One Space/NAV and one Backspace/Shift replace the two identical Hillside keys of each kind. The upper A and Esc thumbs are gone; A stays on the home row and R + S gives Esc.
 
+- **Finger modifiers:** X and `.` double as Cmd; Z and `-` double as Shift. Hold `.` and press T with the other hand for Cmd+T, with no need to pause after typing or wait out the 170 ms hold time. To type `.t` literally, release `.` before pressing T. A quick same-hand roll still types both keys; for a same-hand shortcut, hold the modifier for 170 ms first. The same rule applies to the finger mod-taps on NAV and SYM, but not to the Backspace/Shift thumb.
 - **NAV:** Hold Space for the number row, arrows, wheel, brightness, volume and connection controls. As on the Hillside, NAV + either outer thumb enters that half’s bootloader.
 - **SYM:** Tap the left middle thumb for one symbol, or hold it for the layer. **ADJ:** Hold NAV and SYM together for the Toucan function and media keys. On ADJ, Z unlocks Studio and the five right home-row keys (M through O) select Bluetooth profiles 0–4.
 - **WM:** Hold the left outer thumb for the Hillside Alt shortcuts. On WM the right inner thumb is Shift; the left middle thumb enters the bootloader.
