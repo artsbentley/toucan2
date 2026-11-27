@@ -226,6 +226,16 @@ static void force_redraw_all_widgets(void) {
     }
 }
 
+static lv_timer_t *sleep_animation_timer;
+
+static void sleep_animation_tick(lv_timer_t *timer) {
+    (void)timer;
+    if (is_sleep_screen_active()) {
+        advance_sleep_frame();
+        force_redraw_all_widgets();
+    }
+}
+
 static int display_activity_event_handler(const zmk_event_t *eh) {
     struct zmk_activity_state_changed *ev = as_zmk_activity_state_changed(eh);
     if (ev == NULL) {
@@ -235,10 +245,23 @@ static int display_activity_event_handler(const zmk_event_t *eh) {
     switch (ev->state) {
     case ZMK_ACTIVITY_ACTIVE:
         set_sleep_screen_active(false);
-        // No need to force a redraw, it will happen automatically if really coming back from sleep (ACTIVE also comes after IDLE)
-        //force_redraw_all_widgets();
+        if (sleep_animation_timer) {
+            lv_timer_pause(sleep_animation_timer);
+        }
+        force_redraw_all_widgets();
+        break;
+    case ZMK_ACTIVITY_IDLE:
+        set_sleep_screen_active(true);
+        force_redraw_all_widgets();
+        if (sleep_animation_timer) {
+            lv_timer_reset(sleep_animation_timer);
+            lv_timer_resume(sleep_animation_timer);
+        }
         break;
     case ZMK_ACTIVITY_SLEEP:
+        if (sleep_animation_timer) {
+            lv_timer_pause(sleep_animation_timer);
+        }
         set_sleep_screen_active(true);
         force_redraw_all_widgets();
         // Force LVGL to process pending updates and flush to display hardware
@@ -247,7 +270,7 @@ static int display_activity_event_handler(const zmk_event_t *eh) {
         lv_refr_now(NULL);
         break;
     default:
-        break; // ignore other states (like IDLE)
+        break;
     }
     return 0;
 }
@@ -296,6 +319,13 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     lv_canvas_set_buffer(top, widget->cbuf, SCREEN_WIDTH, SCREEN_HEIGHT, LV_IMG_CF_TRUE_COLOR);
 
     sys_slist_append(&widgets, &widget->node);
+    if (!sleep_animation_timer) {
+        // Low refresh rate keeps the idle animation gentle and limits display work.
+        sleep_animation_timer = lv_timer_create(sleep_animation_tick, 800, NULL);
+        if (sleep_animation_timer) {
+            lv_timer_pause(sleep_animation_timer);
+        }
+    }
     widget_battery_status_init();
     widget_battery_peripheral_status_init();
     widget_layer_status_init();
